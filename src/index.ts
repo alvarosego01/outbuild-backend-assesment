@@ -1,30 +1,33 @@
-// src/index.ts
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
+import express, { Express } from "express";
+import { envs } from "./core/config/envs";
+import { setupSwagger } from "./core/config/swagger";
+import logger from "./core/utils/logger";
+import routes from "./routes";
 
-/*
- * Load up and parse configuration details from
- * the `.env` file to the `process.env`
- * object of Node.js
- */
-dotenv.config();
+async function bootstrap() {
 
-/*
- * Create an Express application and get the
- * value of the PORT environment variable
- * from the `process.env`
- */
-const app: Express = express();
-const port = process.env.PORT || 3000;
+    const app: Express = express();
 
-/* Define a route for the root path ("/")
- using the HTTP GET method */
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server sdasdas ");
-});
+    app.use(express.json());
 
-/* Start the Express app and listen
- for incoming requests on the specified port */
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+    setupSwagger(app);
+
+    const port = envs.port || 3000;
+
+    // app.get('/', async (req, res) => {
+    //     res.send('Hello world!');
+    // });
+
+    app.use('/', routes);
+
+    // logRoutes(router);
+
+    // console.log('routes', routes);
+
+    app.listen(port, () => {
+
+        logger.info(`[server]: Server is running at http://localhost:${port}`);
+
+    });
+}
+bootstrap();

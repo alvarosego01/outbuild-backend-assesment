@@ -128,3 +128,14 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+.env
+
+database
+
+.vscode
+
+pruebas.*
+
+node_modules

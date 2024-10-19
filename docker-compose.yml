@@ -1,0 +1,41 @@
+
+version: '3'
+services:
+
+  outbuild_db:
+    container_name: outbuild_db
+    image: postgres:16.3-alpine3.20
+    restart: always
+    volumes:
+      - ./database/postgres:/var/lib/postgresql/data
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USERNAME}
+    networks:
+      - outbuild-backend
+
+  # client-gateway:
+  #   build:
+  #     context: ./client-gateway
+  #     args:
+  #       - GITHUB_TOKEN=${GITHUB_TOKEN}
+  #   ports:
+  #     - ${PORT_CLIENT_GATEWAY}:3000
+  #   restart: always
+  #   volumes:
+  #     - ./client-gateway/src:/usr/src/app/src
+  #   environment:
+  #     - PORT=3000
+  #     - NODE_ENV=${NODE_ENV}
+  #     - NATS_SERVERS=nats://nats-server:4222
+  #     - GITHUB_TOKEN=${GITHUB_TOKEN}
+  #   networks:
+  #     - outbuild-backend
+
+
+networks:
+  outbuild-backend:
+    driver: bridge
