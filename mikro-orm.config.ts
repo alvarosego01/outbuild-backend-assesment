@@ -1,7 +1,7 @@
 import { Options } from "@mikro-orm/core";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { Migrator } from "@mikro-orm/migrations";
-import { envs } from "./core/config/envs";
+import { envs } from "./src/core/config/envs";
 
 const db_c = {
     dbName: envs.db_name || process.env.DB_NAME,
@@ -22,8 +22,8 @@ const config: Options = {
 
     debug: true,
     migrations: {
-        path: 'dist/database/migrations',
-        pathTs: './src/database/migrations',
+        path: 'dist/orm_database/migrations',
+        pathTs: './src/orm_database/migrations',
         transactional: true,
         tableName: '_migrations',
         emit: 'ts',
