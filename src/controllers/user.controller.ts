@@ -1,13 +1,15 @@
 
 
-import { Request, RequestHandler, Response } from 'express';
+import { Response } from 'express';
 import { ExceptionsHandler } from '../core/interceptors';
 import { RegisterUser_Dto } from '../dto/Create-User.dto';
 
 import * as bcrypt from 'bcrypt';
 import { OrmContext } from '../orm_database/ormContext';
 import { _Response_I } from '../core/interfaces';
-import { error } from 'console';
+import { LoginUser_Dto } from '../dto';
+import { AuthService } from '../services/auth.service';
+import jwt from 'jsonwebtoken';
 
 
 export class UserController {
@@ -15,24 +17,50 @@ export class UserController {
     // private readonly logger = new Logger('UserService');
 
     ExceptionsHandler = new ExceptionsHandler();
+    authService = new AuthService();
 
-    test: RequestHandler = async (req, res, next) => {
+    // this.logger.error(`[Find all users] Error: ${error}`);
 
-        res.send('Test method');
+    async verifyToken(token: string, res: Response) {
+        let _Response: _Response_I;
+
+        try {
+
+            const { sub, iat, exp, ...user } = this.authService.verifyToken(token) as jwt.JwtPayload;
+            const new_token = this.authService.generateToken(user);
+
+            _Response = {
+                ok: true,
+                statusCode: 200,
+                message: 'Token verificado',
+                data: {
+                    ...user,
+                    id: sub,
+                    token: new_token
+                }
+            };
+
+            res.status(_Response.statusCode).json(_Response);
+
+        } catch (error) {
+
+            // this.logger.error(`[ Verify token ] Error: ${error}`);
+            this.ExceptionsHandler.EmitException(error, res, 'AuthService.verifyToken');
+
+        }
 
     }
 
-    // this.logger.error(`[Find all users] Error: ${error}`);
-    // return this.ExceptionsHandler.EmitException({hola: '122345'}, res, 'UserController.findAll');
 
-    create: RequestHandler = async (req, res, next) => {
+
+    create = async (RegisterUser_Dto: RegisterUser_Dto, res: Response) => {
 
         const {
             email,
             last_name,
             name,
             password
-        } = req.body as RegisterUser_Dto;
+        } = RegisterUser_Dto;
 
         let _Response: _Response_I;
 
@@ -72,7 +100,7 @@ export class UserController {
                 }
             }
 
-        res.status(_Response.statusCode).json(_Response);
+            res.status(_Response.statusCode).json(_Response);
 
         } catch (error) {
 
@@ -84,16 +112,72 @@ export class UserController {
 
     }
 
-    login: RequestHandler = async (req: Request, res: Response) => {
-        const loginUserDto = req.body;
-        try {
-            const client = { send: (event: string, data: any) => Promise.resolve(data) };
-            const result = await client.send('auth.login.user', loginUserDto);
-            res.status(200).json(result);
-        } catch (error) {
-            res.status(500).json({ message: 'Error en el inicio de sesión', error });
-        }
-    };
+    login = async (LoginUser_Dto: LoginUser_Dto, res: Response) => {
 
+        const {
+            email,
+            password
+        } = LoginUser_Dto;
+
+        let _Response: _Response_I;
+
+        try {
+
+            const ormContext = new OrmContext();
+            const user = await ormContext.users.findOne({
+                email
+            });
+
+            if (!user) {
+
+                // this.logger.warn(`[Login user] El usuario ${email} no existe`);
+                _Response = {
+                    ok: false,
+                    statusCode: 404,
+                    message: `User ${email} not found`,
+                    data: null
+                }
+                throw _Response
+
+            }
+
+            const isPassValid = bcrypt.compareSync(password, user.password);
+
+            if (!isPassValid) {
+                _Response = {
+                    ok: false,
+                    statusCode: 400,
+                    message: `Password not valid`,
+                    data: null
+                }
+                throw _Response;
+            }
+
+            const {
+                password: ___,
+                ...rest
+            } = user;
+
+            const token = this.authService.generateToken(user);
+
+            _Response = {
+                ok: true,
+                statusCode: 200,
+                message: 'Session started, welcome',
+                data: {
+                    ...rest,
+                    token
+                }
+            }
+
+            res.status(_Response.statusCode).json(_Response);
+
+        } catch (error) {
+
+            this.ExceptionsHandler.EmitException(error, res, 'UserController.login');
+
+        }
+
+    };
 
 }

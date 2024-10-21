@@ -5,7 +5,8 @@ import { setupSwagger } from "./core/config/swagger";
 import { OrmContext } from "./orm_database/ormContext";
 import logger from "./core/utils/logger";
 import routes from "./routes";
-
+import { configurePassport } from "./core/config/passport";
+import passport from "passport";
 
 export const server = async () => {
 
@@ -18,6 +19,9 @@ export const server = async () => {
     const port = envs.port || 3000;
 
     app.use('/', routes);
+
+    app.use(passport.initialize());
+    configurePassport(passport);
 
     await OrmContext.init();
 

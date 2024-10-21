@@ -6,9 +6,11 @@ export class ExceptionsHandler {
     constructor() {}
 
     EmitException(error: any, res: Response, context?: string) {
-        if (this.isResponseStructure(error?.error)) {
+
+        if (this.isResponseStructure(error)) {
              res.status(error.statusCode || 500).json({
-                ...error.error,
+                ...error,
+                err: null,
                 context: context || 'ExceptionsHandler'
             });
         } else {

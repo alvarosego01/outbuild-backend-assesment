@@ -1,24 +1,26 @@
 
 
 
-// import { Request, Response, NextFunction } from 'express';
 
-// // Simulación de middleware de autenticación
-// const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-//     const token = req.headers['authorization'];
 
-//     if (!token) {
-//         return res.status(401).json({ message: 'No token provided' });
-//     }
+import { Request, Response, NextFunction } from 'express';
+import { AuthService } from '../../services/auth.service';
 
-//     try {
-//         // Aquí deberías verificar el token (JWT o cualquier otro sistema)
-//         const decoded = { userId: 1, name: 'Test User' };  // Simulación de decodificación de token
-//         req.user = decoded;  // Añadir el usuario decodificado al request
-//         next();  // Continuar al siguiente middleware o controlador
-//     } catch (error) {
-//         return res.status(401).json({ message: 'Invalid token' });
-//     }
-// };
+const authService = new AuthService();
 
-// export default authMiddleware;
+export const auth_JWT = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const response = await authService.verifyToken( req.headers.authorization as string );
+
+        if (response) {
+            res.status(200).json(response);
+        }
+
+        req.user = response;
+        next();
+
+    } catch (error) {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+};
