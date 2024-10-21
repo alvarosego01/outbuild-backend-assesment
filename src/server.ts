@@ -11,19 +11,20 @@ import passport from "passport";
 export const server = async () => {
 
     const app: Express = express();
+    const port = envs.port || 3000;
 
     app.use(express.json({ limit: '10mb' }));
     app.use(express.urlencoded({ extended: true, limit: '10mb' }));
     setupSwagger(app);
 
-    const port = envs.port || 3000;
 
-    app.use('/', routes);
+    await OrmContext.init();
 
     app.use(passport.initialize());
     configurePassport(passport);
 
-    await OrmContext.init();
+    app.use('/', routes);
+
 
     app.listen(port, () => {
 

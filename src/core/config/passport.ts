@@ -21,6 +21,7 @@ export const configurePassport = (passport: PassportStatic) => {
                 } else {
                     return done(null, false);
                 }
+
             } catch (error) {
                 return done(error, false);
             }
