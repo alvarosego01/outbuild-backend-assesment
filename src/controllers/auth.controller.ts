@@ -10,16 +10,15 @@ import { _Response_I } from '../core/interfaces';
 import { LoginUser_Dto } from '../dto';
 import { AuthService } from '../services/auth.service';
 import jwt from 'jsonwebtoken';
+import LoggerService from '../core/utils/logger';
 
 
 export class AuthController {
 
-    // private readonly logger = new Logger('UserService');
+    logger = new LoggerService('AuthController');
 
     ExceptionsHandler = new ExceptionsHandler();
     authService = new AuthService();
-
-    // this.logger.error(`[Find all users] Error: ${error}`);
 
     verifyToken = async (token: string, res: Response) => {
 
@@ -45,7 +44,7 @@ export class AuthController {
 
         } catch (error) {
 
-            // this.logger.error(`[ Verify token ] Error: ${error}`);
+            this.logger.error(`[ Verify token ] Error: `, error);
             this.ExceptionsHandler.EmitException(error, res, 'AuthController.verifyToken');
 
         }
@@ -104,7 +103,7 @@ export class AuthController {
 
         } catch (error) {
 
-            // this.logger.error(`[Register auth] Error: ${error}`);
+            this.logger.error(`[Register auth] Error:`, error);
             this.ExceptionsHandler.EmitException(error, res, 'AuthController.create');
 
         }
@@ -128,29 +127,18 @@ export class AuthController {
                 email
             });
 
-            if (!user) {
+            const isPassValid = bcrypt.compareSync(password, user.password);
 
-                // this.logger.warn(`[Login user] El usuario ${email} no existe`);
+            if (!user || !isPassValid) {
+
                 _Response = {
                     ok: false,
                     statusCode: 404,
-                    message: `User ${email} not found`,
+                    message: `Credentials not valid or user not found`,
                     data: null
                 }
                 throw _Response
 
-            }
-
-            const isPassValid = bcrypt.compareSync(password, user.password);
-
-            if (!isPassValid) {
-                _Response = {
-                    ok: false,
-                    statusCode: 400,
-                    message: `Password not valid`,
-                    data: null
-                }
-                throw _Response;
             }
 
             const {
@@ -174,6 +162,7 @@ export class AuthController {
 
         } catch (error) {
 
+            this.logger.error(`[Login auth] Error:`, error);
             this.ExceptionsHandler.EmitException(error, res, 'AuthController.login');
 
         }

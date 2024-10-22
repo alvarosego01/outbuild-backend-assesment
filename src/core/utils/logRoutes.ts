@@ -1,3 +1,4 @@
+
 import express from 'express';
 import Table from 'cli-table3';
 import chalk from 'chalk';
@@ -70,7 +71,6 @@ function logRoutes(router: express.Router) {
             table.push([colorMethod(route.method), route.path]);
         });
 
-        // logger.info(`\nRoutes table: \n${table.toString()}`);
         console.log(`${table.toString()}`)
     });
 

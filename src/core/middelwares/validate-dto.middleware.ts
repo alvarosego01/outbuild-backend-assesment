@@ -10,7 +10,11 @@ const exceptionsHandler = new ExceptionsHandler();
 
 export function validateDto(dtoClass: any) {
     return async (req: Request, res: Response, next: NextFunction) => {
+
+
         const dtoInstance = plainToInstance(dtoClass, req.body);
+
+        console.log('dtoInstance', dtoInstance);
 
         const errors: ValidationError[] = await validate(dtoInstance);
 

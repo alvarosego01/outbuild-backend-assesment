@@ -2,52 +2,35 @@
 
 import { Response } from 'express';
 import { ExceptionsHandler } from '../core/interceptors';
-import { RegisterUser_Dto } from '../dto/Create-User.dto';
 
-import * as bcrypt from 'bcrypt';
 import { OrmContext } from '../orm_database/ormContext';
-import { _Response_I, User_Auth_I } from '../core/interfaces';
-import { LoginUser_Dto } from '../dto';
+import { _Response_I } from '../core/interfaces';
 import { AuthService } from '../services/auth.service';
-import jwt from 'jsonwebtoken';
 import { User_Ety } from '../entities/user.entity';
-
+import LoggerService from '../core/utils/logger';
 
 export class UserController {
 
-    // private readonly logger = new Logger('UserService');
+    logger = new LoggerService('UserController');
 
     ExceptionsHandler = new ExceptionsHandler();
     authService = new AuthService();
 
-    // this.logger.error(`[Find all users] Error: ${error}`);
-
-    getUser_byId = async (id: string, user_auth: User_Auth_I, res: Response) => {
+    getUser_byId = async (id: string, res: Response) => {
 
         let _Response: _Response_I<User_Ety>;
-
-        if (id != user_auth.sub) {
-
-            _Response = {
-                ok: false,
-                statusCode: 400,
-                message: 'Unauthorized access or not exist',
-                data: null
-            };
-            throw _Response;
-
-        }
 
         try {
 
             const ormContext = new OrmContext();
             const user = await ormContext.users.findOne({
                 id
-            });
+            },
+             { populate: ['schedules'] }
+            );
 
             if (!user) {
 
-                // this.logger.warn(`[Login user] El usuario ${email} no existe`);
                 _Response = {
                     ok: false,
                     statusCode: 404,
@@ -72,8 +55,8 @@ export class UserController {
 
         } catch (error) {
 
-            // this.logger.error(`[ Verify token ] Error: ${error}`);
-            this.ExceptionsHandler.EmitException(error, res, 'AuthService.verifyToken');
+            this.logger.error(`[ Get user by Id ] Error: `, error);
+            this.ExceptionsHandler.EmitException(error, res, 'UserController.getUser_byId');
 
         }
 

@@ -27,6 +27,14 @@ export const auth_JWT = async (req: Request, res: Response, next: NextFunction) 
         next();
 
     } catch (error) {
-        res.status(401).json({ message: 'Unauthorized' });
+
+            const resp: _Response_I = {
+                ok: false,
+                message: 'Unauthorized',
+                statusCode: 401,
+                err: error
+            }
+            res.status(resp.statusCode).json(resp);
+
     }
 };

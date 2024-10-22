@@ -1,12 +1,13 @@
 
 
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Schema_key } from './schemaKey';
+import { Schedule_Ety } from './schedule.entity';
 
 
 @Entity({
     tableName: 'user',
-    collection: 'user',
+    // collection: 'user
 })
 export class User_Ety extends Schema_key{
 
@@ -30,6 +31,9 @@ export class User_Ety extends Schema_key{
         type: 'varchar'
     })
     last_name: string;
+
+    @OneToMany(() => Schedule_Ety, schedule => schedule.user, { mappedBy: 'user', orphanRemoval: true})
+    schedules: Schedule_Ety[];
 
     @Property({ type: 'date', default: 'now()' })
     createdAt = new Date();

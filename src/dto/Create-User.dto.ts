@@ -1,5 +1,5 @@
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
+import { IsEmail, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class RegisterUser_Dto {
 
