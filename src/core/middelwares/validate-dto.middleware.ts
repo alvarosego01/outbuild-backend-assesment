@@ -14,8 +14,6 @@ export function validateDto(dtoClass: any) {
 
         const dtoInstance = plainToInstance(dtoClass, req.body);
 
-        console.log('dtoInstance', dtoInstance);
-
         const errors: ValidationError[] = await validate(dtoInstance);
 
         if (errors.length > 0) {
@@ -26,7 +24,7 @@ export function validateDto(dtoClass: any) {
                 })
             );
 
-            return exceptionsHandler.EmitException(validationError, res, 'Validate DTO');
+            return exceptionsHandler.EmitException(validationError, res, 'Validate DTO', 'Validation Dto failed');
 
         }
 

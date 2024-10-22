@@ -1,7 +1,7 @@
 import { ExceptionsHandler } from "../core/interceptors";
 import { _Response_I } from "../core/interfaces";
 import LoggerService from "../core/utils/logger";
-import { CreateScheduleDto } from "../dto";
+import { CreateSchedule_Dto, UpdateSchedule_Dto } from "../dto";
 import { OrmContext } from "../orm_database/ormContext";
 
 import { Response } from 'express';
@@ -18,7 +18,12 @@ export class ScheduleController {
         try {
 
             const ormContext = new OrmContext();
-            const schedules = await ormContext.schedules.find({ user: user_auth.sub });
+            const schedules = await ormContext.schedules.find({
+                user: user_auth.sub
+            },
+                {
+                    populate: ['activities']
+                });
 
             _Response = {
                 ok: true,
@@ -38,7 +43,7 @@ export class ScheduleController {
 
     };
 
-    createSchedule = async (dto: CreateScheduleDto, user_auth: any, res: Response) => {
+    createSchedule = async (dto: CreateSchedule_Dto, user_auth: any, res: Response) => {
 
         let _Response: _Response_I;
 
@@ -80,12 +85,12 @@ export class ScheduleController {
                 id: scheduleId,
                 user: user_auth.sub
 
-                },
+            },
                 {
-                populate: ['activities']
-            });
+                    populate: ['activities']
+                });
 
-            if ( !schedule ) {
+            if (!schedule) {
                 _Response = {
                     ok: false,
                     statusCode: 404,
@@ -109,6 +114,82 @@ export class ScheduleController {
             this.logger.error(`[Get Schedule] Error:`, error);
             this.ExceptionsHandler.EmitException(error, res, 'ScheduleController.getScheduleById');
 
+        }
+    };
+
+    deleteSchedule = async (scheduleId: string, user_auth: any, res: Response) => {
+        let _Response: _Response_I;
+
+        try {
+            const ormContext = new OrmContext();
+            const schedule = await ormContext.schedules.findOne({
+                id: scheduleId,
+                user: user_auth.sub
+            });
+
+            if (!schedule) {
+                _Response = {
+                    ok: false,
+                    statusCode: 404,
+                    message: 'Schedule not found',
+                    data: null
+                };
+                throw _Response;
+            }
+
+            await ormContext.schedules.nativeDelete(schedule);
+
+            _Response = {
+                ok: true,
+                statusCode: 200,
+                message: 'Schedule deleted successfully',
+                data: null
+            };
+
+            res.status(_Response.statusCode).json(_Response);
+
+        } catch (error) {
+            this.logger.error(`[Delete Schedule] Error:`, error);
+            this.ExceptionsHandler.EmitException(error, res, 'ScheduleController.deleteSchedule');
+        }
+    };
+
+    updateSchedule = async (scheduleId: string, UpdateScheduleDto: UpdateSchedule_Dto, user_auth: any, res: Response) => {
+        let _Response: _Response_I;
+
+        try {
+            const ormContext = new OrmContext();
+            const schedule = await ormContext.schedules.findOne({
+                id: scheduleId,
+                user: user_auth.sub
+            });
+
+            if (!schedule) {
+                _Response = {
+                    ok: false,
+                    statusCode: 404,
+                    message: 'Schedule not found',
+                    data: null
+                };
+                throw _Response;
+            }
+
+            ormContext.schedules.assign(schedule, UpdateScheduleDto);
+
+            await ormContext.em.persistAndFlush(schedule);
+
+            _Response = {
+                ok: true,
+                statusCode: 200,
+                message: 'Schedule updated successfully',
+                data: schedule
+            };
+
+            res.status(_Response.statusCode).json(_Response);
+
+        } catch (error) {
+            this.logger.error(`[Update Schedule] Error:`, error);
+            this.ExceptionsHandler.EmitException(error, res, 'ScheduleController.updateSchedule');
         }
     };
 

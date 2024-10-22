@@ -1,6 +1,6 @@
 import { _Response_I, User_Auth_I } from "../core/interfaces";
 import LoggerService from "../core/utils/logger";
-import { CreateActivityDto } from "../dto";
+import { CreateActivity_Dto, UpdateActivity_Dto } from "../dto";
 import { OrmContext } from "../orm_database/ormContext";
 
 import { ExceptionsHandler } from "../core/interceptors";
@@ -13,7 +13,7 @@ export class ActivitiesController {
     ExceptionsHandler = new ExceptionsHandler();
 
 
-      addActivityToSchedule = async (scheduleId: string, dto: CreateActivityDto, user_auth: User_Auth_I, res: Response) => {
+      addActivityToSchedule = async (scheduleId: string, dto: CreateActivity_Dto, user_auth: User_Auth_I, res: Response) => {
         let _Response: _Response_I;
 
         try {
@@ -57,7 +57,7 @@ export class ActivitiesController {
         }
     };
 
-    addActivitiesBulk = async (scheduleId: string, activities: CreateActivityDto[], user_auth: User_Auth_I, res: Response) => {
+    addActivitiesBulk = async (scheduleId: string, activities: CreateActivity_Dto[], user_auth: User_Auth_I, res: Response) => {
         let _Response: _Response_I;
 
         try {
@@ -101,7 +101,7 @@ export class ActivitiesController {
         }
     };
 
-    getActivityById = async (scheduleId: string, activityId: string, user_auth: User_Auth_I, res: Response) => {
+    getActivityById = async ( activityId: string, user_auth: User_Auth_I, res: Response) => {
 
         let _Response: _Response_I;
 
@@ -111,7 +111,6 @@ export class ActivitiesController {
             const activity = await ormContext.activities.findOne({
                 id: activityId,
                 schedule: {
-                    id: scheduleId,
                     user: user_auth.sub
                 },
             });
@@ -141,7 +140,7 @@ export class ActivitiesController {
         }
     };
 
-    updateActivity = async (scheduleId: string, activityId: string, updateActivityDto: any, user_auth: User_Auth_I, res: Response) => {
+    updateActivity = async ( activityId: string, updateActivityDto: UpdateActivity_Dto, user_auth: User_Auth_I, res: Response) => {
 
         let _Response: _Response_I;
 
@@ -151,7 +150,6 @@ export class ActivitiesController {
             const activity = await ormContext.activities.findOne({
                 id: activityId,
                  schedule: {
-                    id: scheduleId,
                     user: user_auth.sub
                 },
             });
@@ -184,7 +182,7 @@ export class ActivitiesController {
         }
     };
 
-    deleteActivity = async (scheduleId: string, activityId: string, user_auth: User_Auth_I, res: Response) => {
+    deleteActivity = async ( activityId: string, user_auth: User_Auth_I, res: Response) => {
 
         let _Response: _Response_I;
 
@@ -194,7 +192,6 @@ export class ActivitiesController {
             const activity = await ormContext.activities.findOne({
                 id: activityId,
                  schedule: {
-                    id: scheduleId,
                     user: user_auth.sub
                 },
             });
@@ -209,7 +206,7 @@ export class ActivitiesController {
                 throw _Response;
             }
 
-            await ormContext.em.removeAndFlush(activity);
+            await ormContext.activities.nativeDelete(activity);
 
             _Response = {
                 ok: true,
@@ -228,3 +225,5 @@ export class ActivitiesController {
 
 
 }
+
+

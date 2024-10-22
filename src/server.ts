@@ -8,7 +8,7 @@ import { configurePassport } from "./core/config/passport";
 import passport from "passport";
 import LoggerService from "./core/utils/logger";
 
-export const server = async () => {
+export const server = async (): Promise<Express> => {
 
     const app: Express = express();
     const port = envs.port || 3000;
@@ -31,5 +31,7 @@ export const server = async () => {
         logger.info(`Server is running at http://localhost:${port}`);
 
     });
+
+    return app;
 
 }

@@ -1,9 +1,9 @@
 
 
 
-import { IsString, IsUrl, MinLength } from 'class-validator';
+import { IsOptional, IsString, IsUrl, MinLength } from 'class-validator';
 
-export class CreateScheduleDto {
+export class CreateSchedule_Dto {
 
     @IsString()
     @MinLength(3)
@@ -14,3 +14,16 @@ export class CreateScheduleDto {
 
 }
 
+
+export class UpdateSchedule_Dto {
+
+    @IsOptional()
+    @IsString()
+    @MinLength(3)
+    name: string;
+
+    @IsOptional()
+    @IsUrl()
+    imageUrl: string;
+
+}

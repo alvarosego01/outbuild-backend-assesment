@@ -2,7 +2,7 @@
 import { Type } from "class-transformer";
 import { ArrayNotEmpty, IsArray, IsDate, IsString, MinLength } from "class-validator";
 
-export class CreateActivityDto {
+export class CreateActivity_Dto {
 
     @IsString()
     @MinLength(3)
@@ -16,10 +16,9 @@ export class CreateActivityDto {
     @IsDate()
     endDate: Date;
 
-
 }
 
-export class UpdateActivityDto {
+export class UpdateActivity_Dto {
 
     @IsString()
     name: string;
@@ -31,12 +30,15 @@ export class UpdateActivityDto {
     @Type(() => Date)
     @IsDate()
     endDate: Date;
+
 }
 
 export class BulkCreateActivityDto {
+
     @IsArray()
     @ArrayNotEmpty()
-    activities: CreateActivityDto[];
+    activities: CreateActivity_Dto[];
+
 }
 
 /*

@@ -131,6 +131,7 @@ dist
 
 
 .env
+.env.test
 
 database
 
@@ -139,3 +140,7 @@ database
 pruebas.*
 
 node_modules
+
+/coverage/
+/jest-results/
+/dist/

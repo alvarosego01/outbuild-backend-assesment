@@ -5,19 +5,20 @@ export class ExceptionsHandler {
 
     constructor() {}
 
-    EmitException(error: any, res: Response, context?: string) {
+    EmitException(error: any, res: Response, context?: string, message?: string) {
 
         if (this.isResponseStructure(error)) {
              res.status(error.statusCode || 500).json({
                 ...error,
                 err: null,
+                message: message || error.message,
                 context: context || 'ExceptionsHandler'
             });
         } else {
             const response: _Response_I = {
                 ok: false,
                 statusCode: error.statusCode || 400,
-                message: error.message || 'An unexpected error occurred',
+                message: error.message || message || 'An unexpected error occurred',
                 err: error,
                 data: null,
                 context: context || 'ExceptionsHandler'

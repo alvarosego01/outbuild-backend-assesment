@@ -2,12 +2,11 @@
 
 import { Response } from 'express';
 import { ExceptionsHandler } from '../core/interceptors';
-import { RegisterUser_Dto } from '../dto/Create-User.dto';
 
 import * as bcrypt from 'bcrypt';
 import { OrmContext } from '../orm_database/ormContext';
 import { _Response_I } from '../core/interfaces';
-import { LoginUser_Dto } from '../dto';
+import { LoginUser_Dto, RegisterUser_Dto } from '../dto';
 import { AuthService } from '../services/auth.service';
 import jwt from 'jsonwebtoken';
 import LoggerService from '../core/utils/logger';
@@ -32,7 +31,7 @@ export class AuthController {
             _Response = {
                 ok: true,
                 statusCode: 200,
-                message: 'Token verificado',
+                message: 'Token is valid',
                 data: {
                     ...user,
                     id: sub,
@@ -127,9 +126,21 @@ export class AuthController {
                 email
             });
 
+            if (!user) {
+
+                _Response = {
+                    ok: false,
+                    statusCode: 404,
+                    message: `Credentials not valid or user not found`,
+                    data: null
+                }
+                throw _Response
+
+            }
+
             const isPassValid = bcrypt.compareSync(password, user.password);
 
-            if (!user || !isPassValid) {
+            if (!isPassValid) {
 
                 _Response = {
                     ok: false,

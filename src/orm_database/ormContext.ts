@@ -24,8 +24,6 @@ export class OrmContext {
         this.activities = this.em.getRepository(Activity_Ety);
     }
 
-
-
     public static async init() {
         if (!OrmContext.orm) {
             OrmContext.orm = await MikroORM.init();

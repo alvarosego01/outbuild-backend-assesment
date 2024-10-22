@@ -3,8 +3,7 @@
 
 import { Router } from 'express';
 import { validateDto } from '../core/middelwares/validate-dto.middleware';
-import { RegisterUser_Dto } from '../dto/Create-User.dto';
-import { LoginUser_Dto } from '../dto';
+import { LoginUser_Dto, RegisterUser_Dto } from '../dto';
 import { auth_JWT } from '../core/middelwares';
 import { AuthController } from '../controllers/auth.controller';
 
