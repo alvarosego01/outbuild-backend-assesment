@@ -26,6 +26,11 @@ const config: Options = {
         emit: 'ts',
     },
     extensions: [Migrator],
+    driverOptions: {
+        connection: {
+            ssl: (envs.db_username === 'postgres')? false : true,
+        },
+    },
 
 };
 

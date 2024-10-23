@@ -44,39 +44,6 @@ export class ScheduleController {
 
     };
 
-    // listUserSchedules = async (user_auth: User_Auth_I, res: Response) => {
-
-    //     let _Response: _Response_I;
-
-    //     try {
-
-    //         const ormContext = new OrmContext();
-    //         const schedules = await ormContext.schedules.find({
-    //             user: user_auth.sub
-    //         },
-    //             {
-    //                 populate: ['activities']
-    //             });
-
-    //         _Response = {
-    //             ok: true,
-    //             statusCode: 200,
-    //             message: 'User schedules retrieved successfully',
-    //             data: schedules
-    //         };
-
-    //         res.status(_Response.statusCode).json(_Response);
-
-    //     } catch (error) {
-
-    //         const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'ScheduleController.listUserSchedules');
-    //         this.logger.error(`[List Schedules] Error:`, err);
-    //         res.status(err.statusCode).json(err);
-
-    //     }
-
-    // };
-
     listUserSchedules = async (user_auth: User_Auth_I, pagination: PaginationMeta_I, res: Response) => {
     let _Response: _Response_I;
 

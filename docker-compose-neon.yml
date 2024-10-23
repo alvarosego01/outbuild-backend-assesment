@@ -1,28 +1,11 @@
 version: '3'
 services:
 
-  outbuild_db:
-    container_name: outbuild_db
-    image: postgres:16.3-alpine3.20
-    restart: always
-    volumes:
-      - ./database/postgres:/var/lib/postgresql/data
-    ports:
-      - ${DB_PORT}:5432
-    environment:
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USERNAME}
-    networks:
-      - outbuild-backend
-
   api:
     build:
       context: .
     ports:
       - ${PORT}:${PORT}
-    depends_on:
-      - outbuild_db
     restart: always
     volumes:
       - ./logs:/usr/src/app/logs
@@ -31,8 +14,7 @@ services:
       - ./.env
     environment:
       - NODE_ENV=${NODE_ENV}
-      - DB_HOST=outbuild_db
-
+      # - DB_HOST=outbuild_db
     networks:
       - outbuild-backend
     develop:

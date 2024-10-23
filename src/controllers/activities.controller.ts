@@ -12,7 +12,6 @@ export class ActivitiesController {
     logger = new LoggerService('ActivitiesController');
     ExceptionsHandler = new ExceptionsHandler();
 
-
     addActivityToSchedule = async (scheduleId: string, dto: CreateActivity_Dto, user_auth: User_Auth_I, res: Response) => {
         let _Response: _Response_I;
 

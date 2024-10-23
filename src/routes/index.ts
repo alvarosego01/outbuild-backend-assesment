@@ -10,6 +10,11 @@ import logRoutes from '../core/utils/logRoutes';
 
 const router: Router = Router();
 
+router.get('/', (req, res) => {
+  res.redirect('/docs');
+});
+
+
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/schedules', scheduleRoutes);
