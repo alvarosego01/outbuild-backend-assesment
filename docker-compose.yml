@@ -31,7 +31,15 @@ services:
     env_file:
       - ./.env
     environment:
+      - NODE_ENV=${NODE_ENV}
       - DB_HOST=outbuild_db
+      # - PORT=${PORT}
+      # - DB_PASSWORD=${DB_PASSWORD}
+      # - DB_NAME=${DB_NAME}
+      # - DB_PORT=${DB_PORT}
+      # - DB_USERNAME=${DB_USERNAME}
+      # - JWT_SECRET=${JWT_SECRET}
+
     networks:
       - outbuild-backend
     develop:
