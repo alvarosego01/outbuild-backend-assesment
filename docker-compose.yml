@@ -17,23 +17,22 @@ services:
     networks:
       - outbuild-backend
 
-  # client-gateway:
-  #   build:
-  #     context: ./client-gateway
-  #     args:
-  #       - GITHUB_TOKEN=${GITHUB_TOKEN}
-  #   ports:
-  #     - ${PORT_CLIENT_GATEWAY}:3000
-  #   restart: always
-  #   volumes:
-  #     - ./client-gateway/src:/usr/src/app/src
-  #   environment:
-  #     - PORT=3000
-  #     - NODE_ENV=${NODE_ENV}
-  #     - NATS_SERVERS=nats://nats-server:4222
-  #     - GITHUB_TOKEN=${GITHUB_TOKEN}
-  #   networks:
-  #     - outbuild-backend
+  api:
+    build:
+      context: .
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - outbuild_db
+    restart: always
+    volumes:
+      - ./src:/usr/src/app/src
+    env_file:
+      - ./.env
+    environment:
+      - DB_HOST=outbuild_db
+    networks:
+      - outbuild-backend
 
 
 networks:

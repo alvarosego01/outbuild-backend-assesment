@@ -31,7 +31,7 @@ as .env to initialize your environment variables
 ### 3. Create and initialize the database with docker
 
 ```bash
-$ docker compose up -d
+$ docker compose up --build
 ```
 
 # Migrations

@@ -1,5 +1,13 @@
 
 
+export interface PaginationMeta_I {
+    page: number,
+    limit: number,
+    total: number,
+    next: boolean,
+    prev: boolean,
+}
+
 export interface _Response_I<T = any> {
     ok: boolean;
     statusCode: number;

@@ -144,3 +144,5 @@ node_modules
 /coverage/
 /jest-results/
 /dist/
+
+aux_helper.*
