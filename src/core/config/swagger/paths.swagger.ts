@@ -1,7 +1,5 @@
 import { _Response_I } from '../../interfaces/api_response';
 
-let resp: _Response_I = {} as _Response_I;
-
 export const auth_paths = {
     '/auth/login': {
         post: {
@@ -444,15 +442,38 @@ const user_paths = {
 }
 
 export const swagger_schedule_paths = {
+
     '/schedules/': {
         get: {
             summary: 'List all user schedules',
-            description: 'Retrieve all schedules associated with the authenticated user.',
+            description: 'Retrieve all schedules associated with the authenticated user, including pagination details. Optional query parameters `page` and `limit` can be used for pagination.',
             tags: ['Schedules'],
             security: [{ BearerAuth: [] }],
+            parameters: [
+                {
+                    name: 'page',
+                    in: 'query',
+                    description: 'Page number for pagination (defaults to 1)',
+                    required: false,
+                    schema: {
+                        type: 'integer',
+                        example: 1,
+                    },
+                },
+                {
+                    name: 'limit',
+                    in: 'query',
+                    description: 'Number of items per page (defaults to 10)',
+                    required: false,
+                    schema: {
+                        type: 'integer',
+                        example: 5,
+                    },
+                },
+            ],
             responses: {
                 200: {
-                    description: 'A list of schedules',
+                    description: 'A list of schedules along with pagination information',
                     content: {
                         'application/json': {
                             schema: {
@@ -467,6 +488,17 @@ export const swagger_schedule_paths = {
                                             $ref: '#/components/schemas/Schedule',
                                         },
                                         description: 'An array of user schedules',
+                                    },
+                                    paginator: {
+                                        type: 'object',
+                                        properties: {
+                                            page: { type: 'number', example: 1 },
+                                            limit: { type: 'number', example: 10 },
+                                            total: { type: 'number', example: 50 },
+                                            next: { type: 'boolean', example: true },
+                                            prev: { type: 'boolean', example: false },
+                                        },
+                                        description: 'Pagination details for the list of schedules',
                                     },
                                 },
                             },
