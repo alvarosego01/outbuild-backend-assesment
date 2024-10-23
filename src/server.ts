@@ -1,7 +1,7 @@
 
 import express, { Express } from "express";
 import { envs } from "./core/config/envs";
-import { setupSwagger } from "./core/config/swagger";
+import { setupSwagger } from "./core/config/swagger/swagger";
 import { OrmContext } from "./orm_database/ormContext";
 import routes from "./routes";
 import { configurePassport } from "./core/config/passport";
