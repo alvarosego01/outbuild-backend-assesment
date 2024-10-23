@@ -13,7 +13,7 @@ export class ActivitiesController {
     ExceptionsHandler = new ExceptionsHandler();
 
 
-      addActivityToSchedule = async (scheduleId: string, dto: CreateActivity_Dto, user_auth: User_Auth_I, res: Response) => {
+    addActivityToSchedule = async (scheduleId: string, dto: CreateActivity_Dto, user_auth: User_Auth_I, res: Response) => {
         let _Response: _Response_I;
 
         try {
@@ -21,9 +21,9 @@ export class ActivitiesController {
             const schedule = await ormContext.schedules.findOne({
                 id: scheduleId,
                 user: user_auth.sub
-             });
+            });
 
-            if (!schedule ) {
+            if (!schedule) {
                 _Response = {
                     ok: false,
                     statusCode: 404,
@@ -52,8 +52,11 @@ export class ActivitiesController {
             res.status(_Response.statusCode).json(_Response);
 
         } catch (error) {
-            this.logger.error(`[Add Activity] Error:`, error);
-            this.ExceptionsHandler.EmitException(error, res, 'ScheduleController.addActivityToSchedule');
+
+            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'ScheduleController.addActivityToSchedule');
+            this.logger.error(`[Add Activity] Error:`, err);
+            res.status(err.statusCode).json(err);
+
         }
     };
 
@@ -67,7 +70,7 @@ export class ActivitiesController {
                 user: user_auth.sub
             });
 
-            if (!schedule ) {
+            if (!schedule) {
                 _Response = {
                     ok: false,
                     statusCode: 404,
@@ -96,12 +99,15 @@ export class ActivitiesController {
             res.status(_Response.statusCode).json(_Response);
 
         } catch (error) {
-            this.logger.error(`[Add Multiple Activities] Error:`, error);
-            this.ExceptionsHandler.EmitException(error, res, 'ScheduleController.addMultipleActivities');
+
+            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'ScheduleController.addMultipleActivities');
+            this.logger.error(`[Add Multiple Activities] Error:`, err);
+            res.status(err.statusCode).json(err);
+
         }
     };
 
-    getActivityById = async ( activityId: string, user_auth: User_Auth_I, res: Response) => {
+    getActivityById = async (activityId: string, user_auth: User_Auth_I, res: Response) => {
 
         let _Response: _Response_I;
 
@@ -135,12 +141,15 @@ export class ActivitiesController {
             res.status(_Response.statusCode).json(_Response);
 
         } catch (error) {
-            this.logger.error(`[Get Activity] Error:`, error);
-            this.ExceptionsHandler.EmitException(error, res, 'ActivityController.getActivityById');
+
+            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'ActivityController.getActivityById');
+            this.logger.error(`[Get Activity] Error:`, err);
+            res.status(err.statusCode).json(err);
+
         }
     };
 
-    updateActivity = async ( activityId: string, updateActivityDto: UpdateActivity_Dto, user_auth: User_Auth_I, res: Response) => {
+    updateActivity = async (activityId: string, updateActivityDto: UpdateActivity_Dto, user_auth: User_Auth_I, res: Response) => {
 
         let _Response: _Response_I;
 
@@ -149,7 +158,7 @@ export class ActivitiesController {
 
             const activity = await ormContext.activities.findOne({
                 id: activityId,
-                 schedule: {
+                schedule: {
                     user: user_auth.sub
                 },
             });
@@ -177,12 +186,15 @@ export class ActivitiesController {
             res.status(_Response.statusCode).json(_Response);
 
         } catch (error) {
-            this.logger.error(`[Update Activity] Error:`, error);
-            this.ExceptionsHandler.EmitException(error, res, 'ActivityController.updateActivity');
+
+            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'ActivityController.updateActivity');
+            this.logger.error(`[Update Activity] Error:`, err);
+            res.status(err.statusCode).json(err);
+
         }
     };
 
-    deleteActivity = async ( activityId: string, user_auth: User_Auth_I, res: Response) => {
+    deleteActivity = async (activityId: string, user_auth: User_Auth_I, res: Response) => {
 
         let _Response: _Response_I;
 
@@ -191,7 +203,7 @@ export class ActivitiesController {
 
             const activity = await ormContext.activities.findOne({
                 id: activityId,
-                 schedule: {
+                schedule: {
                     user: user_auth.sub
                 },
             });
@@ -218,12 +230,14 @@ export class ActivitiesController {
             res.status(_Response.statusCode).json(_Response);
 
         } catch (error) {
-            this.logger.error(`[Delete Activity] Error:`, error);
-            this.ExceptionsHandler.EmitException(error, res, 'ActivityController.deleteActivity');
+
+            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'ActivityController.deleteActivity');
+            this.logger.error(`[Delete Activity] Error:`, err);
+            res.status(err.statusCode).json(err);
+
         }
     };
 
 
 }
-
 

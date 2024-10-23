@@ -20,10 +20,10 @@ export class UpdateSchedule_Dto {
     @IsOptional()
     @IsString()
     @MinLength(3)
-    name: string;
+    name?: string;
 
     @IsOptional()
     @IsUrl()
-    imageUrl: string;
+    imageUrl?: string;
 
 }

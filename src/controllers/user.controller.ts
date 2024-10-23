@@ -55,8 +55,9 @@ export class UserController {
 
         } catch (error) {
 
-            this.logger.error(`[ Get user by Id ] Error: `, error);
-            this.ExceptionsHandler.EmitException(error, res, 'UserController.getUser_byId');
+            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'UserController.getUser_byId');
+            this.logger.error(`[ Get user by Id ] Error: `, err);
+             res.status(err.statusCode).json(err);
 
         }
 

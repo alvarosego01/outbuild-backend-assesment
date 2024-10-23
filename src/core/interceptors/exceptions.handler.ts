@@ -3,19 +3,23 @@ import { _Response_I } from '../interfaces';
 
 export class ExceptionsHandler {
 
-    constructor() {}
+    constructor() { }
 
-    EmitException(error: any, res: Response, context?: string, message?: string) {
+    EmitException(error: any, context?: string, message?: string) {
+
+        let response: _Response_I = {} as _Response_I;
 
         if (this.isResponseStructure(error)) {
-             res.status(error.statusCode || 500).json({
+            response = {
                 ...error,
                 err: null,
+                statusCode: error.statusCode || 500,
                 message: message || error.message,
                 context: context || 'ExceptionsHandler'
-            });
+            }
+
         } else {
-            const response: _Response_I = {
+            response = {
                 ok: false,
                 statusCode: error.statusCode || 400,
                 message: error.message || message || 'An unexpected error occurred',
@@ -23,8 +27,8 @@ export class ExceptionsHandler {
                 data: null,
                 context: context || 'ExceptionsHandler'
             };
-             res.status(response.statusCode).json(response);
         }
+            return response
     }
 
     isResponseStructure(obj: any): obj is _Response_I {

@@ -11,14 +11,15 @@ let userId: string;
 const blank_data = async () => {
 
     const ormContext = new OrmContext();
-    await ormContext.em.getConnection().execute(`DELETE FROM "user" WHERE email = ?`, ['test_user@outbuild.com']);
+    await ormContext.em.getConnection().execute(`DELETE FROM "user" WHERE email = ?`, ['test_user_1@outbuild.com']);
 
 };
 
-
 beforeAll(async () => {
+
     app = await server();
     await blank_data();
+
 });
 
 afterAll(async () => {
@@ -26,9 +27,9 @@ afterAll(async () => {
 
 });
 
+
 describe('Auth Routes', () => {
 
-    //  User registration tests
     describe('POST /auth/register', () => {
 
         it('Should register a user successfully', async () => {
@@ -36,7 +37,7 @@ describe('Auth Routes', () => {
             const user: RegisterUser_Dto = {
                 name: 'John',
                 last_name: 'Doe',
-                email: 'test_user@outbuild.com',
+                email: 'test_user_1@outbuild.com',
                 password: '_Password123',
             };
 
@@ -69,12 +70,11 @@ describe('Auth Routes', () => {
         });
     });
 
-    //   User login tests
     describe('POST /auth/login', () => {
         it('Should login a user successfully', async () => {
 
             const loginData: LoginUser_Dto = {
-                email: 'test_user@outbuild.com',
+                email: 'test_user_1@outbuild.com',
                 password: '_Password123',
             };
 
@@ -106,7 +106,6 @@ describe('Auth Routes', () => {
         });
     });
 
-    //   Token verification tests
     describe('GET /auth/verify-token', () => {
         it('Should verify a valid token successfully', async () => {
 

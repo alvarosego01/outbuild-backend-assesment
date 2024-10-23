@@ -43,8 +43,9 @@ export class AuthController {
 
         } catch (error) {
 
-            this.logger.error(`[ Verify token ] Error: `, error);
-            this.ExceptionsHandler.EmitException(error, res, 'AuthController.verifyToken');
+            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'AuthController.verifyToken');
+            this.logger.error(`[ Verify token ] Error: `, err);
+            res.status(err.statusCode).json(err);
 
         }
 
@@ -102,11 +103,12 @@ export class AuthController {
 
         } catch (error) {
 
-            this.logger.error(`[Register auth] Error:`, error);
-            this.ExceptionsHandler.EmitException(error, res, 'AuthController.create');
+            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'AuthController.create');
+            this.logger.error(`[Register auth] Error:`, err);
+             res.status(err.statusCode).json(err);
+
 
         }
-
 
     }
 
@@ -173,8 +175,9 @@ export class AuthController {
 
         } catch (error) {
 
-            this.logger.error(`[Login auth] Error:`, error);
-            this.ExceptionsHandler.EmitException(error, res, 'AuthController.login');
+            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'AuthController.login');
+            this.logger.error(`[Login auth] Error:`, err);
+             res.status(err.statusCode).json(err);
 
         }
 

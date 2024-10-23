@@ -1,6 +1,23 @@
 
 import { Type } from "class-transformer";
-import { ArrayNotEmpty, IsArray, IsDate, IsString, MinLength } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsDate, IsString, MinLength, ValidateNested } from "class-validator";
+
+
+export class UpdateActivity_Dto {
+
+    @IsString()
+    name: string;
+
+    @Type(() => Date)
+    @IsDate()
+    startDate: Date;
+
+    @Type(() => Date)
+    @IsDate()
+    endDate: Date;
+
+}
+
 
 export class CreateActivity_Dto {
 
@@ -18,54 +35,12 @@ export class CreateActivity_Dto {
 
 }
 
-export class UpdateActivity_Dto {
-
-    @IsString()
-    name: string;
-
-    @Type(() => Date)
-    @IsDate()
-    startDate: Date;
-
-    @Type(() => Date)
-    @IsDate()
-    endDate: Date;
-
-}
-
 export class BulkCreateActivityDto {
 
-    @IsArray()
-    @ArrayNotEmpty()
+
+        @ValidateNested({ each: true })
+    @Type(() => CreateActivity_Dto)
     activities: CreateActivity_Dto[];
 
 }
 
-/*
-{
-    "activities": [
-        {
-            "name": "Activity 1",
-            "startDate": "2021-08-01T00:00:00.000Z",
-            "endDate": "2021-08-01T00:00:00.000Z"
-        },
-        {
-            "name": "Activity 2",
-            "startDate": "2021-08-01T00:00:00.000Z",
-            "endDate": "2021-08-01T00:00:00.000Z"
-        },
-        {
-            "name": "Activity 3",
-            "startDate": "2021-08-01T00:00:00.000Z",
-            "endDate": "2021-08-01T00:00:00.000Z"
-        }
-    ]
-}
-
-{
-    "name": "Activity 1 - single",
-    "startDate": "2021-08-01T00:00:00.000Z",
-    "endDate": "2021-08-01T00:00:00.000Z"
-}
-
-*/
