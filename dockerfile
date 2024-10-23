@@ -14,4 +14,5 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["pnpm", "dev"]
+# CMD ["pnpm", "dev"]
+CMD ["pnpm", "nodemon", "--watch", "./src", "--exec", "pnpm", "dev"]
