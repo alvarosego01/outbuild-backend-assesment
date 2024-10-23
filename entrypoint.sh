@@ -14,11 +14,11 @@ fi
 
 if [ "$NODE_ENV" = "development" ]; then
   echo "Starting in development mode..."
-#   pnpm nodemon --watch ./src --exec "pnpm dev"
   pnpm dev
 elif [ "$NODE_ENV" = "test" ]; then
   echo "Running tests..."
-  pnpm test
+  pnpm test:watch
+
 elif [ "$NODE_ENV" = "production" ]; then
   echo "Starting in production mode..."
   pnpm start
