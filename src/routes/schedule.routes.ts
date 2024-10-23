@@ -1,15 +1,17 @@
 import { Router } from 'express';
 
-import { auth_JWT, validateDto, verifyOwnership } from '../core/middelwares';
+import { auth_JWT, paginator, validateDto, verifyOwnership } from '../core/middelwares';
 import { ScheduleController } from '../controllers/schedule.controller';
 import { CreateSchedule_Dto, UpdateSchedule_Dto } from '../dto';
 
 const router: Router = Router();
 const scheduleController = new ScheduleController();
 
-router.get('/', [auth_JWT], async (req, res, next) => {
+router.get('/', [auth_JWT, paginator], async (req, res, next) => {
 
-    await scheduleController.listUserSchedules(req.user, res);
+    const { page, limit } = req.query;
+    const pagination = { page, limit };
+    await scheduleController.listUserSchedules(req.user, pagination, res);
 
 });
 

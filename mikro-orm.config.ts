@@ -15,12 +15,9 @@ const config: Options = {
 
     entities: ["dist/**/*.entity{.ts,.js}"],
     entitiesTs: ['./src/**/*.entity{.ts,.js}'],
-
     driver: PostgreSqlDriver,
-
     clientUrl: `postgresql://${db_c.user}:${db_c.password}@${db_c.host}:${db_c.port}/${db_c.dbName}`,
-
-    debug: true,
+    debug: (envs.nodeEnv === 'development') ? true : false,
     migrations: {
         path: 'dist/orm_database/migrations',
         pathTs: './src/orm_database/migrations',

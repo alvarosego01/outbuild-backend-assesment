@@ -111,8 +111,6 @@ describe('ScheduleController - createSchedule', () => {
 
 });
 
-
-
 describe('ScheduleController - listUserSchedules', () => {
     let scheduleController: ScheduleController;
     let mockResponse: Partial<Response>;
@@ -129,6 +127,7 @@ describe('ScheduleController - listUserSchedules', () => {
         ormContextMock = {
             schedules: {
                 find: jest.fn(),
+                count: jest.fn(),
             },
         };
 
@@ -141,37 +140,57 @@ describe('ScheduleController - listUserSchedules', () => {
 
     it('should retrieve user schedules successfully', async () => {
 
-
         const mockSchedules = [
             { id: '1', name: 'Schedule 1', activities: [] },
             { id: '2', name: 'Schedule 2', activities: [] },
         ];
 
+        const totalSchedules = mockSchedules.length;
+        ormContextMock.schedules.count.mockResolvedValue(totalSchedules);
         ormContextMock.schedules.find.mockResolvedValue(mockSchedules);
 
-        await scheduleController.listUserSchedules(userAuth, mockResponse as Response);
+        const pagination = { page: 1, limit: 10 };
+
+        await scheduleController.listUserSchedules(userAuth, pagination, mockResponse as Response);
 
         expect(ormContextMock.schedules.find).toHaveBeenCalledWith(
             { user: 'user_id' },
-            { populate: ['activities'] }
+            {
+                populate: ['activities'],
+                limit: pagination.limit,
+                offset: (pagination.page - 1) * pagination.limit
+            }
         );
+
+        expect(ormContextMock.schedules.count).toHaveBeenCalledWith({
+            user: 'user_id'
+        });
+
         expect(mockResponse.status).toHaveBeenCalledWith(200);
         expect(mockResponse.json).toHaveBeenCalledWith({
             ok: true,
             statusCode: 200,
             message: 'User schedules retrieved successfully',
             data: mockSchedules,
+            paginator: {
+                page: 1,
+                limit: 10,
+                total: totalSchedules,
+                next: false,
+                prev: false,
+            },
         });
     });
 
     it('should handle errors during retrieval of user schedules', async () => {
-
-
         const error = new Error('Database error');
 
+        ormContextMock.schedules.count.mockResolvedValue(0);
         ormContextMock.schedules.find.mockRejectedValue(error);
 
-        await scheduleController.listUserSchedules(userAuth, mockResponse as Response);
+        const pagination = { page: 1, limit: 10 };
+
+        await scheduleController.listUserSchedules(userAuth, pagination, mockResponse as Response);
 
         expect(scheduleController.ExceptionsHandler.EmitException).toHaveBeenCalledWith(
             error,
@@ -187,6 +206,7 @@ describe('ScheduleController - listUserSchedules', () => {
             err: error,
         });
     });
+
 });
 
 

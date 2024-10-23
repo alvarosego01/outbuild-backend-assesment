@@ -1,11 +1,11 @@
 
 
 export interface PaginationMeta_I {
-    page: number,
-    limit: number,
-    total: number,
-    next: boolean,
-    prev: boolean,
+    page?: number,
+    limit?: number,
+    total?: number,
+    next?: boolean,
+    prev?: boolean,
 }
 
 export interface _Response_I<T = any> {
@@ -16,5 +16,5 @@ export interface _Response_I<T = any> {
     message?: any;
     err?: any;
     context?: string;
-    // paginator?: PaginationMeta_I;
+    paginator?: PaginationMeta_I;
 }

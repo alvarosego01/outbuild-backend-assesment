@@ -1,5 +1,5 @@
 import { ExceptionsHandler } from "../core/interceptors";
-import { _Response_I, User_Auth_I } from "../core/interfaces";
+import { _Response_I, PaginationMeta_I, User_Auth_I } from "../core/interfaces";
 import LoggerService from "../core/utils/logger";
 import { CreateSchedule_Dto, UpdateSchedule_Dto } from "../dto";
 import { OrmContext } from "../orm_database/ormContext";
@@ -11,7 +11,7 @@ export class ScheduleController {
     logger = new LoggerService('ScheduleController');
     ExceptionsHandler = new ExceptionsHandler();
 
-     createSchedule = async (dto: CreateSchedule_Dto, user_auth: User_Auth_I, res: Response) => {
+    createSchedule = async (dto: CreateSchedule_Dto, user_auth: User_Auth_I, res: Response) => {
 
         let _Response: _Response_I;
 
@@ -44,38 +44,96 @@ export class ScheduleController {
 
     };
 
-    listUserSchedules = async (user_auth: User_Auth_I, res: Response) => {
+    // listUserSchedules = async (user_auth: User_Auth_I, res: Response) => {
 
-        let _Response: _Response_I;
+    //     let _Response: _Response_I;
 
-        try {
+    //     try {
 
-            const ormContext = new OrmContext();
-            const schedules = await ormContext.schedules.find({
+    //         const ormContext = new OrmContext();
+    //         const schedules = await ormContext.schedules.find({
+    //             user: user_auth.sub
+    //         },
+    //             {
+    //                 populate: ['activities']
+    //             });
+
+    //         _Response = {
+    //             ok: true,
+    //             statusCode: 200,
+    //             message: 'User schedules retrieved successfully',
+    //             data: schedules
+    //         };
+
+    //         res.status(_Response.statusCode).json(_Response);
+
+    //     } catch (error) {
+
+    //         const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'ScheduleController.listUserSchedules');
+    //         this.logger.error(`[List Schedules] Error:`, err);
+    //         res.status(err.statusCode).json(err);
+
+    //     }
+
+    // };
+
+    listUserSchedules = async (user_auth: User_Auth_I, pagination: PaginationMeta_I, res: Response) => {
+    let _Response: _Response_I;
+
+    const { page = 1, limit = 10 } = pagination;
+
+    try {
+
+        const ormContext = new OrmContext();
+
+        const offset = (page - 1) * limit;
+
+        const totalSchedules = await ormContext.schedules.count({
+            user: user_auth.sub
+        });
+
+        const schedules = await ormContext.schedules.find(
+            {
                 user: user_auth.sub
             },
-                {
-                    populate: ['activities']
-                });
+            {
+                populate: ['activities'],
+                limit,
+                offset,
+            }
+        );
 
-            _Response = {
-                ok: true,
-                statusCode: 200,
-                message: 'User schedules retrieved successfully',
-                data: schedules
-            };
+        const totalPages = Math.ceil(totalSchedules / limit);
+        const next = page < totalPages;
+        const prev = page > 1;
 
-            res.status(_Response.statusCode).json(_Response);
+        const paginator: PaginationMeta_I = {
+            page,
+            limit,
+            total: totalSchedules,
+            next,
+            prev
+        };
 
-        } catch (error) {
+        _Response = {
+            ok: true,
+            statusCode: 200,
+            message: 'User schedules retrieved successfully',
+            data: schedules,
+            paginator
+        };
 
-            const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'ScheduleController.listUserSchedules');
-            this.logger.error(`[List Schedules] Error:`, err);
-            res.status(err.statusCode).json(err);
+        res.status(_Response.statusCode).json(_Response);
 
-        }
+    } catch (error) {
 
-    };
+        const err: _Response_I = this.ExceptionsHandler.EmitException(error, 'ScheduleController.listUserSchedules');
+        this.logger.error(`[List Schedules] Error:`, err);
+        res.status(err.statusCode).json(err);
+
+    }
+};
+
 
     getScheduleById = async (scheduleId: string, user_auth: User_Auth_I, res: Response) => {
         let _Response: _Response_I;
