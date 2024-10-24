@@ -14,7 +14,7 @@ To run this project, you will need:
     - Import the endpoints from the `./docs` folder into Insomnia.
 - HeidiSQL, TablePlus, or any other database manager to visualize the database.
 - A terminal console (Powershell, Linux, or Unix depending on your machine).
-- A web browser to view the Swagger documentation at `http://localhost:{PORT}/`.
+- A web browser to view the Swagger documentation at `http://localhost:{PORT}/docs`.
 
 ## Getting Started
 
