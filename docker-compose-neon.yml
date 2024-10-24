@@ -1,0 +1,34 @@
+version: '3'
+services:
+
+  api:
+    build:
+      context: .
+    ports:
+      - ${PORT}:${PORT}
+    restart: always
+    volumes:
+      - ./logs:/usr/src/app/logs
+      - /usr/src/app/node_modules
+    env_file:
+      - ./.env
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      # - DB_HOST=outbuild_db
+    networks:
+      - outbuild-backend
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/src/app/src
+          ignore:
+            - node_modules/
+            - logs/
+            - dist/
+        - action: rebuild
+          path: package.json
+
+networks:
+  outbuild-backend:
+    driver: bridge
