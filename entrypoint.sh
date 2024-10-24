@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 echo "Running in NODE_ENV=$NODE_ENV mode"
 
 echo "Waiting for the database to be ready..."

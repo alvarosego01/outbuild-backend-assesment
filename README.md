@@ -21,37 +21,64 @@ To run this project, you will need:
 1. Clone or download the repository.
 2. Copy the `.env.template` file and rename it to `.env`.
 3. Define the environment variables:
-    - `NODE_ENV`: Can be one of the following:
-        - `development`: For development with Docker.
-        - `production`: For production use with Docker.
-        - `test`: To run unit tests with Docker.
-    - `PORT`: Can be any valid port number (e.g., 3050).
-    - `JWT_SECRET`: Can be any string of characters (e.g., `x4pmrepX03IEh|jvhr6bE$T/=d1gYp`).
-    - For the database, you can either use PostgreSQL Alpine with Docker or Neon Tech:
-        - **If using PostgreSQL Alpine with Docker**, define the following:
-            - `DB_PASSWORD`: Can be any alphanumeric string (e.g., `y7nZdtb5IrnYxlM`).
-            - `DB_NAME`: Can be any name (e.g., `outbuild_backend`).
-            - `DB_HOST`: Default is `localhost` or `127.0.0.1`.
-            - `DB_PORT`: Can be any valid port number (e.g., 5432).
-            - `DB_USERNAME`: Can be any valid username (e.g., `postgres`).
-        - **If using Neon Tech**, you can use the following credentials for testing purposes (dont worry they will be removed later 😉):
-            - `DB_PASSWORD=2UVH6qKrzcQP`
-            - `DB_NAME=outbuild_backend`
-            - `DB_HOST=ep-bold-star-a5jh7tv8.us-east-2.aws.neon.tech`
-            - `DB_PORT=5432`
-            - `DB_USERNAME=outbuild_backend_owner`
+
+<b>If using PostgreSQL Alpine with Docker, define the following variables:</b>
+```bash
+# Configuration for PostgreSQL Alpine with Docker
+
+DB_PASSWORD=y7nZdtb5IrnYxlM   # Can be any alphanumeric string
+DB_NAME=outbuild_backend       # Can be any name
+DB_HOST=localhost              # Default is localhost or 127.0.0.1
+DB_PORT=5432                   # Can be any valid port number
+DB_USERNAME=postgres           # Can be any valid username
+
+# General configuration
+
+PORT=3050                      # Can be any valid port number
+JWT_SECRET=x4pmrepX03IEh|jvhr6bE$T/=d1gYp  # Can be any string of characters
+NODE_ENV=development            # Can be one of the following:
+                                 # development: For development with Docker
+                                 # production: For production use with Docker
+                                 # test: To run unit tests with Docker
+
+```
+<b>If using Neon Tech, use the following credentials (don't worry, they will be removed later 😉):</b>
+```bash
+# Configuration for Neon Tech
+
+DB_PASSWORD=2UVH6qKrzcQP       # Test credentials
+DB_NAME=outbuild_backend        # Test database name
+DB_HOST=ep-bold-star-a5jh7tv8.us-east-2.aws.neon.tech  # Test host for Neon Tech
+DB_PORT=5432                    # Database port
+DB_USERNAME=outbuild_backend_owner  # Test database username
+
+# General configuration
+
+PORT=3050                      # Can be any valid port number
+JWT_SECRET=x4pmrepX03IEh|jvhr6bE$T/=d1gYp  # Can be any string of characters
+NODE_ENV=development            # Can be one of the following:
+                                 # development: For development with Docker
+                                 # production: For production use with Docker
+                                 # test: To run unit tests with Docker
+
+```
 4. Start the project using Docker. You have two options:
-    - **If using PostgreSQL Alpine with Docker**, run:
-      ```bash
-       docker compose up --build
-      ```
-    - **If using Neon Tech**, run:
-      ```bash
-  docker compose -f docker-compose-neon.yml up --build
-      ```
-    - Depending on the defined `NODE_ENV`, the project will start in dev, test, or production mode.
-    - Once started, the Swagger documentation is available at `http://localhost:{PORT}/docs`.
-    - That's it! Happy coding 😎
+
+- **If using PostgreSQL Alpine with Docker**, run:
+
+```bash
+docker compose up --build
+```
+
+- **If using Neon Tech**, run:
+
+```bash
+docker compose -f docker-compose-neon.yml up --build
+```
+
+- Depending on the defined `NODE_ENV`, the project will start in dev, test, or production mode.
+- Once started, the Swagger documentation is available at `http://localhost:{PORT}/docs`.
+- That's it! Happy coding 😎
 
 ## General Project Explanation
 
