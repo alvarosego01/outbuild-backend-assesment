@@ -41,7 +41,7 @@ export const server = async (): Promise<Express> => {
 
     app.listen(port, () => {
 
-        logger.info(`Server is running at http://localhost:${port}`);
+        logger.info(`Server is running at xxx http://localhost:${port}`);
 
     });
 

@@ -16,6 +16,7 @@ RUN pnpm build
 COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
 RUN chmod +x /usr/src/app/entrypoint.sh
 
-EXPOSE 3000
+EXPOSE 3050
+
 
 CMD ["/usr/src/app/entrypoint.sh"]

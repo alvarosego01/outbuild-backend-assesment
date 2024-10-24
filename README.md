@@ -43,11 +43,11 @@ To run this project, you will need:
 4. Start the project using Docker. You have two options:
     - **If using PostgreSQL Alpine with Docker**, run:
       ```bash
-      docker-compose up --build
+       docker compose up --build
       ```
     - **If using Neon Tech**, run:
       ```bash
-      docker-compose -f docker-compose-neon.yml up --build
+  docker compose -f docker-compose-neon.yml up --build
       ```
     - Depending on the defined `NODE_ENV`, the project will start in dev, test, or production mode.
     - Once started, the Swagger documentation is available at `http://localhost:{PORT}/docs`.
