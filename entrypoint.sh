@@ -8,6 +8,8 @@ while ! nc -z $DB_HOST $DB_PORT; do
   sleep 5
 done
 
+  sleep 5
+
   echo "Running migrations..."
   npx mikro-orm migration:up
 
