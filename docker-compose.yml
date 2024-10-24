@@ -26,6 +26,7 @@ services:
     restart: always
     volumes:
       - ./logs:/usr/src/app/logs
+      - ./src:/usr/src/app/src
       - /usr/src/app/node_modules
     env_file:
       - ./.env
@@ -35,17 +36,17 @@ services:
 
     networks:
       - outbuild-backend
-    develop:
-      watch:
-        - action: sync
-          path: ./src
-          target: /usr/src/app/src
-          ignore:
-            - node_modules/
-            - logs/
-            - dist/
-        - action: rebuild
-          path: package.json
+    # develop:
+    #   watch:
+    #     - action: sync
+    #       path: ./src
+    #       target: /usr/src/app/src
+    #       ignore:
+    #         - node_modules/
+    #         - logs/
+    #         - dist/
+    #     - action: rebuild
+    #       path: package.json
 
 networks:
   outbuild-backend:

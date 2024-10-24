@@ -11,6 +11,17 @@ const db_c = {
     password: envs.db_password || process.env.DB_PASSWORD,
 }
 
+const set_ssl = () => {
+
+    if (!db_c.host?.includes('.neon.tech')) {
+        return false
+    } else {
+
+    return true;
+    }
+
+}
+
 const config: Options = {
 
     entities: ["dist/**/*.entity{.ts,.js}"],
@@ -28,7 +39,7 @@ const config: Options = {
     extensions: [Migrator],
     driverOptions: {
         connection: {
-            ssl: (envs.db_username === 'postgres')? false : true,
+            ssl: set_ssl(),
         },
     },
 
