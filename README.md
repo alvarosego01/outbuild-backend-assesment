@@ -41,27 +41,7 @@ NODE_ENV=development            # Can be one of the following:
                                  # production: For production use with Docker
                                  # test: To run unit tests with Docker
 
-```
-<b>If using Neon Tech, use the following credentials (don't worry, they will be removed later 😉):</b>
-```bash
-# Configuration for Neon Tech
 
-DB_PASSWORD=2UVH6qKrzcQP       # Test credentials
-DB_NAME=outbuild_backend        # Test database name
-DB_HOST=ep-bold-star-a5jh7tv8.us-east-2.aws.neon.tech  # Test host for Neon Tech
-DB_PORT=5432                    # Database port
-DB_USERNAME=outbuild_backend_owner  # Test database username
-
-# General configuration
-
-PORT=3050                      # Can be any valid port number
-JWT_SECRET=x4pmrepX03IEh|jvhr6bE$T/=d1gYp  # Can be any string of characters
-NODE_ENV=development            # Can be one of the following:
-                                 # development: For development with Docker
-                                 # production: For production use with Docker
-                                 # test: To run unit tests with Docker
-
-```
 4. Start the project using Docker. You have two options:
 
 - **If using PostgreSQL Alpine with Docker**, run:
